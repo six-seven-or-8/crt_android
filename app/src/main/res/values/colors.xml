@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="azul_900">#0F1E4A</color>
+    <color name="azul_800">#1E3A8A</color>
+    <color name="azul_600">#2563EB</color>
+    <color name="azul_100">#EFF6FF</color>
+    <color name="naranja_600">#F97316</color>
+    <color name="naranja_100">#FFF7ED</color>
+    <color name="verde_700">#15803D</color>
+    <color name="rojo_600">#DC2626</color>
+    <color name="blanco">#FFFFFF</color>
+    <color name="negro">#000000</color>
+    <color name="surface">#F8FAFC</color>
+    <color name="surface_dark">#111827</color>
+</resources>

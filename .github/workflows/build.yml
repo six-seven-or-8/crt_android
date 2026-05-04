@@ -1,0 +1,55 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  build:
+    name: Build APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Configurar JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Descargar gradle-wrapper.jar
+        run: |
+          mkdir -p gradle/wrapper
+          curl -Lo gradle/wrapper/gradle-wrapper.jar \
+            "https://github.com/gradle/gradle/raw/v8.10.2/gradle/wrapper/gradle-wrapper.jar"
+
+      - name: Dar permisos a gradlew
+        run: chmod +x ./gradlew
+
+      - name: Compilar Debug APK
+        run: ./gradlew assembleDebug --stacktrace --no-daemon
+
+      - name: Subir Debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: crt-lineas-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30
+
+      - name: Resumen
+        run: |
+          echo "## ✅ APK listo" >> $GITHUB_STEP_SUMMARY
+          echo "Descárgalo desde **Artifacts** arriba." >> $GITHUB_STEP_SUMMARY
+          if [ -f app/build/outputs/apk/debug/app-debug.apk ]; then
+            size=$(du -sh app/build/outputs/apk/debug/app-debug.apk | cut -f1)
+            echo "Tamaño: $size" >> $GITHUB_STEP_SUMMARY
+          fi

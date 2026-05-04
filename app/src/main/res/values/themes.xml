@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- AppCompat.NoActionBar siempre está disponible con la dependencia de AppCompat -->
+    <style name="Theme.CRTLineas" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:statusBarColor">@color/azul_900</item>
+        <item name="android:navigationBarColor">@color/surface</item>
+        <item name="colorPrimary">@color/azul_800</item>
+        <item name="colorPrimaryDark">@color/azul_900</item>
+        <item name="colorAccent">@color/naranja_600</item>
+        <item name="android:windowBackground">@color/surface</item>
+    </style>
+
+    <style name="Theme.CRTLineas.SplashScreen" parent="Theme.CRTLineas">
+        <item name="android:windowBackground">@color/azul_900</item>
+    </style>
+</resources>

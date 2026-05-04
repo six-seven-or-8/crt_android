@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  network_security_config.xml
+  Permite conexiones HTTPS a todos los portales oficiales del CRT.
+  En Android 9+ el tráfico HTTP está bloqueado por defecto —
+  los portales del CRT usan HTTPS, así que no hay problema.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- Dominios de APIs directas verificadas con HAR -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">weex.mx</domain>
+        <domain includeSubdomains="true">app.weex.mx</domain>
+        <domain includeSubdomains="true">mobig.mx</domain>
+        <domain includeSubdomains="true">femaseisa.com</domain>
+        <domain includeSubdomains="true">yomobile.xyz</domain>
+        <domain includeSubdomains="true">ientc.dev</domain>
+        <domain includeSubdomains="true">soriup.mx</domain>
+        <!-- Portales WebView -->
+        <domain includeSubdomains="true">altanredes.com</domain>
+        <domain includeSubdomains="true">logisticaacn.mx</domain>
+        <domain includeSubdomains="true">dalefon.mx</domain>
+        <domain includeSubdomains="true">internetbienestarmex.com</domain>
+        <domain includeSubdomains="true">redphone.com.mx</domain>
+        <domain includeSubdomains="true">virginmobile.mx</domain>
+        <domain includeSubdomains="true">mimovil.com.mx</domain>
+        <domain includeSubdomains="true">mirlo.com</domain>
+        <domain includeSubdomains="true">mosi.mx</domain>
+        <domain includeSubdomains="true">oxiomobile.com</domain>
+        <domain includeSubdomains="true">btz.mx</domain>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+</network-security-config>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- strings.xml — Español (idioma base) -->
+<!-- CRT Líneas Android — Six-Seven | MIT -->
+<resources>
+    <string name="app_name">CRT Líneas</string>
+    <string name="app_name_full">Consulta Líneas CRT</string>
+    <string name="app_author">por Six-Seven</string>
+    <string name="app_country">México 🇲🇽</string>
+
+    <!-- Tabs -->
+    <string name="tab_inicio">Inicio</string>
+    <string name="tab_consulta">Consulta</string>
+    <string name="tab_resultados">Resultados</string>
+    <string name="tab_manuales">Manuales</string>
+    <string name="tab_acerca">Acerca</string>
+
+    <!-- Formulario -->
+    <string name="form_hint">Ingresa tus datos una sola vez. La app abrirá solo los portales compatibles con tu tipo de persona y pegará los datos automáticamente. Todo se guarda cifrado en tu dispositivo durante 24 horas.</string>
+    <string name="form_tipo">Tipo de persona</string>
+    <string name="form_fisica">Persona física</string>
+    <string name="form_moral">Persona moral</string>
+    <string name="form_ciudadania">Ciudadanía</string>
+    <string name="form_mexicano">Mexicano</string>
+    <string name="form_extranjero">Extranjero</string>
+    <string name="form_curp_label">CURP (18 caracteres)</string>
+    <string name="form_curp_hint">Para persona física mexicana.</string>
+    <string name="form_rfc_label">RFC (12-13 caracteres)</string>
+    <string name="form_rfc_hint">Para persona moral (empresa).</string>
+    <string name="form_pass_label">Número de Pasaporte</string>
+    <string name="form_pass_hint">Para persona física extranjera.</string>
+    <string name="form_tc">Acepto los Términos y Condiciones de cada portal consultado</string>
+    <string name="form_av">Acepto el Aviso de Privacidad de cada portal consultado</string>
+    <string name="form_pnote">Tus datos nunca salen de este dispositivo. Se eliminan automáticamente a las 24 horas.</string>
+    <string name="form_start">Comenzar consulta</string>
+    <string name="form_clear">Limpiar formulario</string>
+    <string name="form_err_curp">Formato de CURP inválido (18 caracteres).</string>
+    <string name="form_err_rfc">RFC inválido (12 o 13 caracteres).</string>
+    <string name="form_err_pass">Número de pasaporte inválido.</string>
+
+    <!-- Progreso -->
+    <string name="prog_title_api">Consultando APIs directas…</string>
+    <string name="prog_title_webview">Portales con formulario</string>
+    <string name="prog_title_done">Consulta completada ✓</string>
+    <string name="prog_inst_api">🚀 Consultando APIs directas en paralelo. Sin captchas. Resultado en segundos.</string>
+    <string name="prog_inst_webview">📋 Cada portal se abre dentro de la app con tus datos ya rellenados.\nResuelve el CAPTCHA si aparece y da clic en Buscar.\nLa app detecta el resultado y pasa al siguiente automáticamente.</string>
+    <string name="prog_webview_done">✓ Terminado — Siguiente portal</string>
+    <string name="prog_webview_manual">Marcar como terminado y continuar</string>
+    <string name="prog_portal_n">Portal %1$d de %2$d</string>
+    <string name="prog_done_msg">%1$d portales consultados.\nVe a la pestaña Resultados para ver el detalle.</string>
+
+    <!-- Resultados -->
+    <string name="res_found">Con números registrados</string>
+    <string name="res_ok">Sin números registrados</string>
+    <string name="res_err">Portales con error</string>
+    <string name="res_empty">Aún no hay resultados.\nVe a Inicio y comienza.</string>
+    <string name="res_clear">Borrar resultados</string>
+    <string name="res_manually">Consultar manualmente</string>
+    <string name="res_since">Error conocido desde: </string>
+    <string name="res_knownerr_title">Portales con error conocido (desde 28/04/2026)</string>
+    <string name="res_knownerr_notice">Los siguientes portales presentan errores de acceso confirmados. Consúltalos manualmente más tarde. Six-Seven los monitorea constantemente.</string>
+    <string name="res_badge_api">API</string>
+    <string name="res_badge_web">WEB</string>
+    <string name="res_lines_found">%1$d línea(s) encontrada(s)</string>
+    <string name="res_no_lines">Sin números registrados</string>
+
+    <!-- Manuales -->
+    <string name="man_title">Portales manuales</string>
+    <string name="man_hint">Estos portales requieren datos adicionales por lo que, si no tienes una cuenta con esas compañías, no es posible revisar si hay líneas registradas con tus datos o si no puedes brindar los datos de tu identificación oficial. Por lo anterior, estas consultas son opcionales y deben realizarse de forma manual.</string>
+    <string name="man_needs">Necesitas:</string>
+    <string name="man_open">Abrir portal</string>
+
+    <!-- Notas de portales manuales -->
+    <string name="man_note_webcomp">El portal usa componentes web propietarios que impiden el pegado automático de datos. Ingresa tu CURP manualmente. Incluye slider CAPTCHA.</string>
+    <string name="man_note_phone_abib">Solicita un número de teléfono ABIB. Solo usuarios con una línea ABIB pueden verificar.</string>
+    <string name="man_note_phone_abib_bien">Solicita un número de teléfono ABIB Bienestar. Solo usuarios con una línea ABIB Bienestar pueden verificar.</string>
+    <string name="man_note_user_pass">Requiere usuario y contraseña de cuenta propia en este portal.</string>
+    <string name="man_note_email_curp">Requiere correo electrónico además del CURP para identificarte.</string>
+    <string name="man_note_id_oficial">Requiere identificación oficial vigente (INE, pasaporte u otro documento). Incluye slider CAPTCHA.</string>
+    <string name="man_note_biometrico">Error 403 al acceder. Puede requerir verificación biométrica (selfie + INE).</string>
+    <string name="man_note_email_vinc">Solicita el correo electrónico que usaste al vincular la línea. Si alguien la registró con un correo desconocido, no podrás verificarla.</string>
+
+    <!-- Credenciales -->
+    <string name="man_cred_curp_slider">CURP + ajustar barra deslizante</string>
+    <string name="man_cred_phone_abib">Número de teléfono ABIB</string>
+    <string name="man_cred_phone_abib_bien">Número de teléfono ABIB Bienestar</string>
+    <string name="man_cred_bestel">Usuario y contraseña de cuenta Bestel</string>
+    <string name="man_cred_curp_email">CURP + correo electrónico</string>
+    <string name="man_cred_izzi">Usuario y contraseña de cuenta Izzi</string>
+    <string name="man_cred_id_oficial">Identificación oficial vigente</string>
+    <string name="man_cred_redphone">Usuario y contraseña de cuenta Redphone Koonol</string>
+    <string name="man_cred_sky">Usuario y contraseña de cuenta Sky</string>
+    <string name="man_cred_biometrico">Verificación biométrica (selfie + INE)</string>
+    <string name="man_cred_email_vinc">Correo electrónico de vinculación</string>
+    <string name="man_cred_yumovil">Usuario y contraseña de cuenta Yu Movil</string>
+
+    <!-- Errores conocidos -->
+    <string name="err_proximamente">El portal muestra "Próximamente". El servicio no está habilitado aún.</string>
+    <string name="err_403">Error 403. El portal bloquea el acceso externo.</string>
+    <string name="err_522">Error 522 de Cloudflare. El servidor del portal está caído.</string>
+    <string name="err_403_vtl">Error 403. VinculaTuLinea bloquea el acceso directo a esta ruta.</string>
+    <string name="err_timeout">Timeout de conexión. El portal no responde.</string>
+
+    <!-- Acerca -->
+    <string name="about_version">Versión</string>
+    <string name="about_author">Autor</string>
+    <string name="about_license">Licencia</string>
+    <string name="about_lic_val">MIT — código abierto</string>
+    <string name="about_privacy">Privacidad</string>
+    <string name="about_priv_val">Sin servidores externos. Todo local. Expira en 24h.</string>
+    <string name="about_code">Código</string>
+    <string name="about_donate">Donaciones voluntarias</string>
+    <string name="about_donate_sub">Si esta herramienta te fue útil, puedes apoyar su desarrollo.</string>
+    <string name="about_kofi">☕ Apoyar en Ko-fi</string>
+    <string name="about_share">Compartir</string>
+    <string name="about_share_sub">Ayuda a otros a proteger su identidad.</string>
+    <string name="about_copy_addr">Copiar dirección</string>
+    <string name="about_share_text">Descubre si alguien registró líneas telefónicas a tu nombre sin permiso. App gratuita que revisa todos los portales del CRT en México. Protege tu identidad: https://github.com/six-seven/crt-lineas-android</string>
+    <string name="donate_address">Dirección:</string>
+    <string name="donate_tag">Destination Tag:</string>
+    <string name="donate_memo">Memo:</string>
+    <string name="donate_memoid">Memo ID:</string>
+    <string name="donate_notrequired">No requerido</string>
+
+    <!-- Splash -->
+    <string name="splash_another">Ver otra frase</string>
+    <string name="splash_another_more">Ver otra más… 👀</string>
+    <string name="splash_enter">Comenzar consulta</string>
+    <string name="splash_privacy">Datos cifrados · Expiran en 24h · Sin servidores propios</string>
+
+    <!-- Donación -->
+    <string name="donation_kofi">☕ Donar en Ko-fi</string>
+    <string name="donation_another">Otra frase</string>
+
+    <!-- Altan -->
+    <string name="altan_note_title">🔑 Dato técnico: Altán Redes</string>
+    <string name="altan_note_body">rnu.altanredes.com/consulta cubre aproximadamente 67 operadoras OMV de la red Altán en una sola consulta. Confirmado por análisis del tráfico de red. Una consulta, 67 empresas.</string>
+</resources>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ícono de la app: "6-7" en naranja sobre azul -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Fondo azul -->
+    <path
+        android:fillColor="#1E3A8A"
+        android:pathData="M0,0 L108,0 L108,108 L0,108 Z" />
+
+    <!-- Texto "6-7" en blanco centrado -->
+    <!-- Representado como rectángulos estilizados por limitaciones de text en vector -->
+    <!-- El "6" -->
+    <path
+        android:fillColor="#F97316"
+        android:pathData="M22,30 L22,78 L38,78 L38,60 L28,60 L28,48 L38,48 L38,30 Z
+                          M28,36 L32,36 L32,42 L28,42 Z
+                          M28,66 L32,66 L32,72 L28,72 Z" />
+
+    <!-- El "-" -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M44,51 L64,51 L64,57 L44,57 Z" />
+
+    <!-- El "7" -->
+    <path
+        android:fillColor="#F97316"
+        android:pathData="M70,30 L70,36 L82,36 L70,78 L78,78 L92,30 Z" />
+
+</vector>
