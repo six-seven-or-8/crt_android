@@ -9,10 +9,14 @@ jobs:
           keytool -genkey -v \
             -keystore crt-lineas-release.jks \
             -alias crt-lineas-key \
-            -keyalg RSA -keysize 2048 -validity 10000 \
-            -storepass vsBMpd0kqsalfN&i \
-            -keypass vsBMpd0kqsalfN&i \
-            -dname "CN=Six-Seven, OU=CRT Lineas, O=Six-Seven, L=Mexico, ST=Mexico, C=MX"
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass vsBMpd0kqsalfNi \
+            -keypass vsBMpd0kqsalfNi \
+            -noprompt \
+            -dname "CN=SixSeven, OU=CRTLineas, O=SixSeven, L=Mexico, ST=Mexico, C=MX"
           echo "=== KEYSTORE_BASE64 ==="
-          base64 crt-lineas-release.jks
+          base64 -w 0 crt-lineas-release.jks
+          echo ""
           echo "=== FIN ==="
