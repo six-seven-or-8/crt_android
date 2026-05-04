@@ -35,6 +35,7 @@ jobs:
       - name: Dar permisos a gradlew
         run: chmod +x ./gradlew
 
+      # ── Debug APK (siempre) ────────────────────────────────
       - name: Compilar Debug APK
         run: ./gradlew assembleDebug --stacktrace --no-daemon
 
@@ -45,11 +46,48 @@ jobs:
           path: app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
 
+      # ── Release AAB firmado (solo en push a main) ──────────
+      - name: Compilar Release AAB
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: ./gradlew bundleRelease --no-daemon
+
+      - name: Firmar Release AAB
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push' && env.KEYSTORE_BASE64 != ''
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 --decode > keystore.jks
+          jarsigner \
+            -verbose \
+            -sigalg SHA256withRSA \
+            -digestalg SHA-256 \
+            -keystore keystore.jks \
+            -storepass "$STORE_PASSWORD" \
+            -keypass "$KEY_PASSWORD" \
+            app/build/outputs/bundle/release/app-release.aab \
+            "$KEY_ALIAS"
+          rm keystore.jks
+
+      - name: Subir Release AAB
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: actions/upload-artifact@v4
+        with:
+          name: crt-lineas-release-aab
+          path: app/build/outputs/bundle/release/app-release.aab
+          retention-days: 90
+
       - name: Resumen
         run: |
-          echo "## ✅ APK listo" >> $GITHUB_STEP_SUMMARY
-          echo "Descárgalo desde **Artifacts** arriba." >> $GITHUB_STEP_SUMMARY
+          echo "## ✅ Build completado" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
           if [ -f app/build/outputs/apk/debug/app-debug.apk ]; then
             size=$(du -sh app/build/outputs/apk/debug/app-debug.apk | cut -f1)
-            echo "Tamaño: $size" >> $GITHUB_STEP_SUMMARY
+            echo "### Debug APK: $size" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ -f app/build/outputs/bundle/release/app-release.aab ]; then
+            size=$(du -sh app/build/outputs/bundle/release/app-release.aab | cut -f1)
+            echo "### Release AAB: $size" >> $GITHUB_STEP_SUMMARY
           fi
