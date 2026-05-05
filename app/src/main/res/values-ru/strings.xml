@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Проверка CRT</string>
-    <string name="app_name_full">Проверка линий CRT</string>
+    <string name="app_name">LineShield</string>
+    <string name="app_name_full">LineShield</string>
     <string name="app_author">от Six-Seven</string>
     <string name="form_hint">Введите данные один раз. Приложение откроет только совместимые порталы и заполнит ваши данные автоматически. Всё хранится зашифровано на устройстве в течение 24 часов.</string>
     <string name="form_tipo">Тип лица</string>

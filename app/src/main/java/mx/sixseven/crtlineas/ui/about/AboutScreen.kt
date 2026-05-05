@@ -59,7 +59,7 @@ fun AboutScreen() {
                 shadowElevation = 4.dp,
             ) {
                 Text(
-                    text  = "6-7",
+                    text  = "LS",
                     style = MaterialTheme.typography.displayMedium.copy(
                         fontWeight = FontWeight.Black,
                         color      = CRTColors.Blanco,
@@ -69,12 +69,12 @@ fun AboutScreen() {
                 )
             }
             Text(
-                text  = "Consulta Líneas CRT",
+                text  = "LineShield",
                 style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
                 textAlign = TextAlign.Center,
             )
             Text(
-                text  = "por Six-Seven · México 🇲🇽",
+                text  = "Protege tu identidad telefónica",
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 ),

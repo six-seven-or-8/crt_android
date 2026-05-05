@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Ícono de la app: "6-7" en naranja sobre azul -->
+<!-- LineShield launcher icon — escudo con LS -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
@@ -9,25 +9,26 @@
     <!-- Fondo azul -->
     <path
         android:fillColor="#1E3A8A"
-        android:pathData="M0,0 L108,0 L108,108 L0,108 Z" />
+        android:pathData="M0,0 L108,0 L108,108 L0,108 Z"/>
 
-    <!-- Texto "6-7" en blanco centrado -->
-    <!-- Representado como rectángulos estilizados por limitaciones de text en vector -->
-    <!-- El "6" -->
+    <!-- Escudo exterior naranja -->
     <path
         android:fillColor="#F97316"
-        android:pathData="M22,30 L22,78 L38,78 L38,60 L28,60 L28,48 L38,48 L38,30 Z
-                          M28,36 L32,36 L32,42 L28,42 Z
-                          M28,66 L32,66 L32,72 L28,72 Z" />
+        android:pathData="M54,12 L84,24 L84,56 Q84,80 54,92 Q24,80 24,56 L24,24 Z"/>
 
-    <!-- El "-" -->
+    <!-- Escudo interior azul oscuro -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M44,51 L64,51 L64,57 L44,57 Z" />
+        android:fillColor="#0F1E4A"
+        android:pathData="M54,20 L78,30 L78,56 Q78,74 54,84 Q30,74 30,56 L30,30 Z"/>
 
-    <!-- El "7" -->
+    <!-- L -->
     <path
         android:fillColor="#F97316"
-        android:pathData="M70,30 L70,36 L82,36 L70,78 L78,78 L92,30 Z" />
+        android:pathData="M38,40 L38,68 L56,68 L56,62 L44,62 L44,40 Z"/>
+
+    <!-- S -->
+    <path
+        android:fillColor="#F97316"
+        android:pathData="M58,40 L72,40 L72,46 L64,46 Q60,46 60,50 Q60,54 64,54 L68,54 Q74,54 74,62 Q74,68 68,68 L56,68 L56,62 L66,62 Q68,62 68,60 Q68,58 66,58 L62,58 Q56,58 56,50 Q56,40 62,40 Z"/>
 
 </vector>

@@ -2,8 +2,8 @@
 <!-- strings.xml — Español (idioma base) -->
 <!-- CRT Líneas Android — Six-Seven | MIT -->
 <resources>
-    <string name="app_name">CRT Líneas</string>
-    <string name="app_name_full">Consulta Líneas CRT</string>
+    <string name="app_name">LineShield</string>
+    <string name="app_name_full">LineShield</string>
     <string name="app_author">por Six-Seven</string>
     <string name="app_country">México 🇲🇽</string>
 

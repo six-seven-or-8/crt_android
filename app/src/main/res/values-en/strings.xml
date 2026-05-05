@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">CRT Lines</string>
-    <string name="app_name_full">CRT Lines Check</string>
+    <string name="app_name">LineShield</string>
+    <string name="app_name_full">LineShield</string>
     <string name="app_author">by Six-Seven</string>
     <string name="form_hint">Enter your data once. The app will open only compatible portals and fill in your data automatically. Everything is stored encrypted on your device for 24 hours.</string>
     <string name="form_tipo">Person type</string>

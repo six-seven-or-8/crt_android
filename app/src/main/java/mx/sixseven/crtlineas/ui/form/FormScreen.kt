@@ -208,7 +208,7 @@ private fun FormHeader() {
             color  = CRTColors.Naranja600,
         ) {
             Text(
-                text     = "6-7",
+                text     = "LS",
                 style    = MaterialTheme.typography.titleLarge.copy(
                     fontWeight = FontWeight.Black,
                     color      = CRTColors.Blanco,
@@ -218,14 +218,14 @@ private fun FormHeader() {
         }
         Column {
             Text(
-                text  = "Consulta Líneas CRT",
+                text  = "LineShield",
                 style = MaterialTheme.typography.headlineMedium.copy(
                     fontWeight = FontWeight.Bold,
                     color      = MaterialTheme.colorScheme.onBackground,
                 ),
             )
             Text(
-                text  = "por Six-Seven · México 🇲🇽",
+                text  = "Protege tu identidad telefónica",
                 style = MaterialTheme.typography.bodySmall.copy(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 ),

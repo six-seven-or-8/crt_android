@@ -62,20 +62,57 @@ fun SplashScreen(onEnter: () -> Unit) {
             // ── Logo / Badge ───────────────────────────────
             Spacer(Modifier.height(16.dp))
 
-            Surface(
-                shape  = RoundedCornerShape(16.dp),
-                color  = CRTColors.Naranja600,
-                shadowElevation = 8.dp,
+            // Escudo LineShield
+            Box(
+                modifier = Modifier.size(120.dp),
+                contentAlignment = Alignment.Center,
             ) {
+                // Escudo exterior naranja
+                Surface(
+                    modifier = Modifier.size(120.dp),
+                    shape    = androidx.compose.ui.graphics.Shape::class.let {
+                        androidx.compose.foundation.shape.GenericShape { size, _ ->
+                            val w = size.width
+                            val h = size.height
+                            moveTo(w * 0.5f, 0f)
+                            lineTo(w * 0.95f, h * 0.18f)
+                            lineTo(w * 0.95f, h * 0.55f)
+                            cubicTo(w * 0.95f, h * 0.82f, w * 0.72f, h * 0.95f, w * 0.5f, h)
+                            cubicTo(w * 0.28f, h * 0.95f, w * 0.05f, h * 0.82f, w * 0.05f, h * 0.55f)
+                            lineTo(w * 0.05f, h * 0.18f)
+                            close()
+                        }
+                    },
+                    color = CRTColors.Naranja600,
+                ) {}
+                // Escudo interior azul oscuro
+                Surface(
+                    modifier = Modifier
+                        .size(96.dp)
+                        .offset(y = 4.dp),
+                    shape    = androidx.compose.foundation.shape.GenericShape { size, _ ->
+                        val w = size.width
+                        val h = size.height
+                        moveTo(w * 0.5f, 0f)
+                        lineTo(w * 0.95f, h * 0.18f)
+                        lineTo(w * 0.95f, h * 0.55f)
+                        cubicTo(w * 0.95f, h * 0.82f, w * 0.72f, h * 0.95f, w * 0.5f, h)
+                        cubicTo(w * 0.28f, h * 0.95f, w * 0.05f, h * 0.82f, w * 0.05f, h * 0.55f)
+                        lineTo(w * 0.05f, h * 0.18f)
+                        close()
+                    },
+                    color = CRTColors.Azul900,
+                ) {}
+                // Texto LS encima
                 Text(
-                    text  = "6-7",
+                    text  = "LS",
                     style = MaterialTheme.typography.displayLarge.copy(
-                        fontWeight   = FontWeight.Black,
-                        fontSize     = 42.sp,
-                        color        = CRTColors.Blanco,
+                        fontWeight    = FontWeight.Black,
+                        fontSize      = 38.sp,
+                        color         = CRTColors.Naranja600,
                         letterSpacing = (-1).sp,
                     ),
-                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
+                    modifier = Modifier.offset(y = 4.dp),
                 )
             }
 
