@@ -56,7 +56,21 @@ class ApiService {
                 "yo_mobile" -> queryYoMobile(id)
                 "ientc"     -> queryIentc(id, tipo)
                 "mirlo"     -> queryMirlo(id)
-                "sorcel"    -> querySorcel(id)
+                "sorcel"         -> querySorcel(id)
+                // VinculaTuLinea — mismo endpoint, pathName varía
+                "vtl_freedompop" -> queryVinculaTuLinea(id, "freedompop")
+                "vtl_oui"        -> queryVinculaTuLinea(id, "oui")
+                "vtl_yobi"       -> queryVinculaTuLinea(id, "yobitelecom")
+                "vtl_ahorrocel"  -> queryVinculaTuLinea(id, "ahorrocel")
+                "vtl_chedraui"   -> queryVinculaTuLinea(id, "chedrauimovil")
+                "vtl_oxxocel"    -> queryVinculaTuLinea(id, "oxxocel")
+                "vtl_ubercel"    -> queryVinculaTuLinea(id, "ubercel")
+                // core.newww.mx — mismo endpoint, brand varía
+                "newww_linkmovil" -> queryCoreNewww(id, "lm")
+                "newww_newww"     -> queryCoreNewww(id, "nw")
+                "newww_redaguila" -> queryCoreNewww(id, "ra")
+                // Megamóvil
+                "megamovil"       -> queryMegamovil(id)
                 else        -> errorResult(companyId, "API no implementada")
             }
         }.getOrElse { e ->
@@ -375,6 +389,120 @@ class ApiService {
             viaApi      = true,
             status      = ResultStatus.OK,
         )
+    }
+
+    // ── VinculaTuLinea — GET subscriptions-by-curp ───────────
+    // API compartida verificada con HAR: freedompop, oui, yobitelecom,
+    // ahorrocel, chedrauimovil, oxxocel, ubercel
+    // Solo cambia el pathName. Acepta CURP, RFC y Pasaporte.
+    private suspend fun queryVinculaTuLinea(id: String, pathName: String): QueryResult {
+        val url = "https://vinculatulinea.com/omv-lineas/v1/omv-services/subscriptions-by-curp" +
+                  "?pathName=$pathName&apiName=getSubscriptionsbyCURP"
+        val request = Request.Builder()
+            .url(url)
+            .get()
+            .addHeader("Accept", "application/json")
+            .addHeader("Origin", "https://vinculatulinea.com")
+            .addHeader("Referer", "https://vinculatulinea.com/$pathName/welcome")
+            .build()
+        return runCatching {
+            val response = client.newCall(request).execute()
+            val body = response.body?.string() ?: ""
+            val root = org.json.JSONObject(body)
+            val code = root.optInt("responseCode", -1)
+            val subs = root.optJSONArray("subscription")
+            val phones = mutableListOf<String>()
+            if (subs != null) {
+                for (i in 0 until subs.length()) {
+                    val item = subs.optJSONObject(i)
+                    val num = item?.optString("msisdn") ?: item?.optString("phone") ?: ""
+                    if (num.isNotBlank() && num.length >= 10) phones.add(num)
+                }
+            }
+            // responseCode 0 = consultado (puede haber 0 líneas), otros = error
+            if (code == 3) errorResult(pathName, "err.403")
+            else QueryResult(
+                companyId   = "vtl_$pathName",
+                companyName = pathName,
+                phones      = phones,
+                found       = phones.isNotEmpty(),
+                viaApi      = true,
+                status      = ResultStatus.OK,
+            )
+        }.getOrElse { errorResult("vtl_$pathName", it.message ?: "Error") }
+    }
+
+    // ── core.newww.mx — GET consulta_lineas_vinculacion ───────
+    // API compartida verificada con HAR: Link Móvil, Newww, Red Águila
+    // brand: "lm" = Link Móvil, "nw" = Newww, "ra" = Red Águila
+    private suspend fun queryCoreNewww(id: String, brand: String): QueryResult {
+        val url = "https://core.newww.mx/api/core/consulta_lineas_vinculacion?curp=$id"
+        val request = Request.Builder()
+            .url(url)
+            .get()
+            .addHeader("Accept", "application/json")
+            .addHeader("Origin", "https://core.newww.mx")
+            .build()
+        return runCatching {
+            val response = client.newCall(request).execute()
+            val body = response.body?.string() ?: ""
+            val root = org.json.JSONObject(body)
+            val resCode = root.optInt("code", -1)
+            val phones = mutableListOf<String>()
+            val data = root.optJSONArray("data")
+            if (data != null) {
+                for (i in 0 until data.length()) {
+                    val item = data.optJSONObject(i)
+                    val num = item?.optString("msisdn") ?: item?.optString("phone") ?: ""
+                    if (num.isNotBlank() && num.length >= 10) phones.add(num)
+                }
+            }
+            val companyName = when(brand) { "lm" -> "Link Móvil"; "nw" -> "Newww"; else -> "Red Águila" }
+            QueryResult(
+                companyId   = "newww_$brand",
+                companyName = companyName,
+                phones      = phones,
+                found       = phones.isNotEmpty(),
+                viaApi      = true,
+                status      = ResultStatus.OK,
+            )
+        }.getOrElse { errorResult("newww_$brand", it.message ?: "Error") }
+    }
+
+    // ── Megamóvil — GET validaCURP ────────────────────────────
+    // API propia verificada con HAR
+    private suspend fun queryMegamovil(id: String): QueryResult {
+        val url = "https://consultavinculacion.megamovil.mx/validaCURP?curp=$id"
+        val request = Request.Builder()
+            .url(url)
+            .get()
+            .addHeader("Accept", "application/json")
+            .addHeader("Origin", "https://consultavinculacion.megamovil.mx")
+            .build()
+        return runCatching {
+            val response = client.newCall(request).execute()
+            val body = response.body?.string() ?: ""
+            val root = org.json.JSONObject(body)
+            val status = root.optString("status", "")
+            val phones = mutableListOf<String>()
+            val lines = root.optJSONArray("lines") ?: root.optJSONArray("lineas")
+            if (lines != null) {
+                for (i in 0 until lines.length()) {
+                    val item = lines.optJSONObject(i)
+                    val num = item?.optString("msisdn") ?: item?.optString("number") ?: ""
+                    if (num.isNotBlank() && num.length >= 10) phones.add(num)
+                }
+            }
+            // "ERROR" en status significa sin líneas (no error de sistema)
+            QueryResult(
+                companyId   = "megamovil",
+                companyName = "Mega Móvil",
+                phones      = phones,
+                found       = phones.isNotEmpty(),
+                viaApi      = true,
+                status      = ResultStatus.OK,
+            )
+        }.getOrElse { errorResult("megamovil", it.message ?: "Error") }
     }
 
     private fun errorResult(id: String, msg: String) = QueryResult(

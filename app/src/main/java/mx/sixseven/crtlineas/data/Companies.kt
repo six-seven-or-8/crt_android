@@ -43,6 +43,20 @@ object Companies {
             queryMode = QueryMode.API_DIRECT,
             personas  = PortalPersonas.FISICA_MX_MORAL,
         ),
+        // VinculaTuLinea — API compartida, pathName cambia por OMV
+        Company(id="vtl_freedompop", name="Freedompop",          queryMode=QueryMode.API_DIRECT, personas=PortalPersonas.TODOS),
+        Company(id="vtl_oui",        name="OUI",                  queryMode=QueryMode.API_DIRECT, personas=PortalPersonas.TODOS),
+        Company(id="vtl_yobi",       name="Yobi Telecom",         queryMode=QueryMode.API_DIRECT, personas=PortalPersonas.TODOS),
+        Company(id="vtl_ahorrocel",  name="AhorroCel",            queryMode=QueryMode.API_DIRECT, personas=PortalPersonas.FISICA_MX_MORAL),
+        Company(id="vtl_chedraui",   name="Chedraui Movil",       queryMode=QueryMode.API_DIRECT, personas=PortalPersonas.FISICA_MX_MORAL),
+        Company(id="vtl_oxxocel",    name="OXXO CEL",             queryMode=QueryMode.API_DIRECT, personas=PortalPersonas.FISICA_MX_MORAL),
+        Company(id="vtl_ubercel",    name="Uber Cel",             queryMode=QueryMode.API_DIRECT, personas=PortalPersonas.FISICA_MX_MORAL),
+        // core.newww.mx — API compartida por 3 OMVs
+        Company(id="newww_linkmovil",name="Link Móvil",           queryMode=QueryMode.API_DIRECT, personas=PortalPersonas.FISICA_MX_MORAL),
+        Company(id="newww_newww",    name="Newww",                queryMode=QueryMode.API_DIRECT, personas=PortalPersonas.FISICA_MX_MORAL),
+        Company(id="newww_redaguila",name="Red Águila",           queryMode=QueryMode.API_DIRECT, personas=PortalPersonas.FISICA_MX_MORAL),
+        // Megamóvil — API propia
+        Company(id="megamovil",      name="Mega Móvil",           queryMode=QueryMode.API_DIRECT, personas=PortalPersonas.FISICA_MX_MORAL),
         Company(
             id        = "sorcel",
             name      = "Sorcel",
@@ -150,25 +164,15 @@ object Companies {
         ManualCompany("telcel",  "Telcel",                "https://registro.telcel.com/vinculatulinea",                   "man.note.biometrico",  "man.cred.biometrico"),
         ManualCompany("tokamov", "Tokamovil",             "https://tokamovil.mx/cumplimiento/consulta-vinculacion/",      "man.note.email_vinc",  "man.cred.email_vinc"),
         ManualCompany("yumovil", "Yu Movil",              "https://www.yumovil.com.mx/login",                             "man.note.user_pass",   "man.cred.user_pass_yumovil"),
+        ManualCompany("nextor",  "Nextor Móvil",          "https://vinculacion.nextormovil.mx/",                          "man.note.id_oficial",  "man.cred.id_oficial"),
     )
 
     // ── Portales con error conocido ────────────────────────
     val errorCompanies = listOf(
-        ErrorCompany("beneleit",    "Beneleit Movil",                  "https://beneleit.mx/consultalineas/",                        "err.proximamente", "28/04/2026", PortalPersonas.FISICA_MX),
-        ErrorCompany("link_movil",  "Link Movil",                      "https://movil.linkteconectamos.com/consultar-vinculacion/",   "err.timeout",      "28/04/2026", PortalPersonas.FISICA_MX),
-        ErrorCompany("mega_movil",  "Mega Movil",                      "https://consultavinculacion.megamovil.mx/",                   "err.403",          "28/04/2026", PortalPersonas.FISICA_MX),
-        ErrorCompany("newww",       "Newww",                           "https://consultavinculacion.newww.mx/",                       "err.timeout",      "28/04/2026", PortalPersonas.FISICA_MX),
-        ErrorCompany("nextor",      "Nextor Movil",                    "https://vinculacion.nextormovil.mx/",                         "err.timeout",      "28/04/2026", PortalPersonas.FISICA_MX),
-        ErrorCompany("red_aguila",  "Red Águila",                      "https://consultavinculacion.redaguila.com.mx/",               "err.timeout",      "28/04/2026", PortalPersonas.FISICA_MX),
-        ErrorCompany("viralcel",    "Viral Cel",                       "https://www.viralcel.com/mi-linea",                           "err.403",          "28/04/2026", PortalPersonas.FISICA_MX),
-        ErrorCompany("wiicel",      "Wiicel (portal propio)",          "https://wiicel.com/",                                         "err.522",          "28/04/2026", PortalPersonas.FISICA_MX),
-        ErrorCompany("ahorrocel",   "AhorroCel (VinculaTuLinea)",      "https://vinculatulinea.com/Ahorrocel",                        "err.403_vtl",      "28/04/2026", PortalPersonas.FISICA_MX),
-        ErrorCompany("chedraui",    "Chedraui Movil (VinculaTuLinea)", "https://vinculatulinea.com/Chedrauimovil",                    "err.403_vtl",      "28/04/2026", PortalPersonas.FISICA_MX),
-        ErrorCompany("freedompop",  "Freedompop (VinculaTuLinea)",     "https://vinculatulinea.com/Freedompop",                       "err.403_vtl",      "28/04/2026", PortalPersonas.FISICA_MX),
-        ErrorCompany("oxxocel",     "OXXO CEL (VinculaTuLinea)",       "https://vinculatulinea.com/Oxxocel",                          "err.403_vtl",      "28/04/2026", PortalPersonas.FISICA_MX),
-        ErrorCompany("oui",         "OUI (VinculaTuLinea)",            "https://vinculatulinea.com/oui/welcome",                      "err.403_vtl",      "28/04/2026", PortalPersonas.FISICA_MX),
-        ErrorCompany("ubercel",     "Uber Cel (VinculaTuLinea)",       "https://vinculatulinea.com/Ubercel",                          "err.403_vtl",      "28/04/2026", PortalPersonas.FISICA_MX),
-        ErrorCompany("yobi",        "Yobi Telecom (VinculaTuLinea)",   "https://vinculatulinea.com/YobiTelecom",                      "err.403_vtl",      "28/04/2026", PortalPersonas.FISICA_MX),
+        // Beneleit: aún en desarrollo
+        ErrorCompany("beneleit",    "Beneleit Movil",      "https://beneleit.mx/consultalineas/",    "err.proximamente", "05/05/2026", PortalPersonas.FISICA_MX),
+        // Viralcel: error 403 persistente
+        ErrorCompany("viralcel",    "Viral Cel",           "https://www.viralcel.com/mi-linea",      "err.403",          "05/05/2026", PortalPersonas.FISICA_MX),
     )
 
     // ── Filtrar portales según tipo de persona ─────────────
