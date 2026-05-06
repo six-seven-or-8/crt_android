@@ -77,7 +77,7 @@
     <string name="about_priv_val">No external servers. Local only. Expires in 24h.</string>
     <string name="about_donate">Gönüllü bağışlar</string>
     <string name="about_donate_sub">If this tool was useful, you can support its development.</string>
-    <string name="about_kofi">☕ Ko-fi'de destek ol</string>
+    <string name="about_kofi">☕ Ko-fi&apos;de destek ol</string>
     <string name="about_share">Paylaş</string>
     <string name="about_share_sub">Help others protect their identity.</string>
     <string name="about_share_text">Discover if someone registered phone lines in your name without permission. Free app that checks all CRT portals in Mexico. Protect your identity: https://github.com/six-seven/crt-lineas-android</string>
@@ -85,6 +85,6 @@
     <string name="splash_another_more">See another… 👀</string>
     <string name="splash_enter">Sorgulamayı başlat</string>
     <string name="splash_privacy">Encrypted data · Expires in 24h · No external servers</string>
-    <string name="donation_kofi">☕ Ko-fi'de bağış yap</string>
+    <string name="donation_kofi">☕ Ko-fi&apos;de bağış yap</string>
     <string name="donation_another">Başka bir cümle</string>
 </resources>

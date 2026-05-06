@@ -24,7 +24,7 @@
     <string name="form_err_curp">Invalid CURP format (18 characters).</string>
     <string name="form_err_rfc">Invalid RFC (12 or 13 characters).</string>
     <string name="form_err_pass">Invalid passport number.</string>
-    <string name="prog_title_api">Directe API's opvragen…</string>
+    <string name="prog_title_api">Directe API&apos;s opvragen…</string>
     <string name="prog_title_webview">Form portals</string>
     <string name="prog_title_done">Query voltooid ✓</string>
     <string name="prog_inst_api">🚀 Querying APIs in parallel. No captchas. Results in seconds.</string>
