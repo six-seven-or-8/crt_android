@@ -52,6 +52,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     // ── Iniciar consulta completa ──────────────────────────
     fun startQuery(userData: UserData) {
         viewModelScope.launch {
+            // Limpiar sesión y resultados previos antes de iniciar
+            storage.clearSession()
             storage.saveUserData(userData)
             storage.startSession()
 

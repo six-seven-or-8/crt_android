@@ -152,7 +152,7 @@ private suspend fun pollSilent(
     """.trimIndent()
 
     // Timeout máximo de 20 segundos — si no hay respuesta, asumir sin líneas
-    repeat(27) {
+    repeat(80) {  // máximo 60 segundos (80 × 750ms)
         delay(750)
         var finished = false
         withContext(kotlinx.coroutines.Dispatchers.Main) {
@@ -190,9 +190,9 @@ private suspend fun pollSilent(
 // ══════════════════════════════════════════════════════════
 @Composable
 private fun FakeProgressScreen(companyName: String) {
-    // Progreso fake: avanza rápido al 85%, luego espera hasta que termine
-    var fakeProgress by remember { mutableStateOf(0f) }
-    var statusText   by remember { mutableStateOf("Iniciando conexión segura…") }
+    // rememberSaveable mantiene el estado cuando el usuario cambia de pestaña
+    var fakeProgress by rememberSaveable { mutableStateOf(0f) }
+    var statusText   by rememberSaveable { mutableStateOf("Iniciando conexión segura…") }
     var hexText      by remember { mutableStateOf("") }
 
     val statusMessages = listOf(
@@ -340,7 +340,7 @@ private fun FakeProgressScreen(companyName: String) {
         Text(
             text  = hexText,
             style = MaterialTheme.typography.labelSmall.copy(
-                color      = CRTColors.Verde700.copy(alpha = 0.5f),
+                color      = CRTColors.Blanco.copy(alpha = 0.6f),
                 fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
                 fontSize   = 10.sp,
                 letterSpacing = 2.sp,
@@ -349,12 +349,6 @@ private fun FakeProgressScreen(companyName: String) {
 
         Spacer(modifier = Modifier.height(48.dp))
 
-        Text(
-            text  = "Esta consulta puede tardar hasta 30 segundos.\nEl portal oficial está siendo consultado de forma segura.",
-            style = MaterialTheme.typography.bodySmall.copy(
-                color     = CRTColors.Blanco.copy(alpha = 0.3f),
-                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-            ),
-        )
+
     }
 }
