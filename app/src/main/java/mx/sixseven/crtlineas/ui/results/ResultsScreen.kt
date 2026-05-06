@@ -245,15 +245,15 @@ private fun DonationCard(
                 )
             }
 
-            Row(
-                modifier              = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                // Ko-fi — solo visible si la frase invita a donar
+                // Ko-fi — arriba, solo visible si la frase invita a donar
                 if (showKofi) {
                     Button(
                         onClick  = onKofi,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.fillMaxWidth(),
                         colors   = ButtonDefaults.buttonColors(
                             containerColor = CRTColors.Naranja600,
                             contentColor   = CRTColors.Blanco,
@@ -264,10 +264,10 @@ private fun DonationCard(
                     }
                 }
 
-                // Botón de frases — siempre visible, invita a seguir leyendo
+                // Botón de frases — siempre visible abajo
                 OutlinedButton(
                     onClick  = onNewPhrase,
-                    modifier = if (showKofi) Modifier else Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     colors   = ButtonDefaults.outlinedButtonColors(
                         contentColor = CRTColors.Naranja600,
                     ),
@@ -312,6 +312,7 @@ private fun ResultSection(
 
 @Composable
 private fun ResultCard(result: QueryResult) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     Surface(
         shape  = RoundedCornerShape(12.dp),
         color  = MaterialTheme.colorScheme.surface,
@@ -369,6 +370,48 @@ private fun ResultCard(result: QueryResult) {
                         color = CRTColors.Rojo600,
                     ),
                 )
+            }
+
+            // URL para consulta manual — siempre visible si existe
+            if (result.url.isNotBlank()) {
+                Spacer(modifier = Modifier.height(2.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(
+                        text  = result.url
+                            .removePrefix("https://")
+                            .removePrefix("http://")
+                            .trimEnd('/'),
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        ),
+                        modifier = Modifier.weight(1f),
+                        maxLines = 1,
+                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                    )
+                    TextButton(
+                        onClick = {
+                            val intent = android.content.Intent(
+                                android.content.Intent.ACTION_VIEW,
+                                android.net.Uri.parse(result.url)
+                            )
+                            context.startActivity(intent)
+                        },
+                        contentPadding = androidx.compose.foundation.layout.PaddingValues(
+                            horizontal = 8.dp, vertical = 2.dp
+                        ),
+                    ) {
+                        Text(
+                            text  = "Ver en web",
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                color = CRTColors.Azul800,
+                            ),
+                        )
+                    }
+                }
             }
         }
     }

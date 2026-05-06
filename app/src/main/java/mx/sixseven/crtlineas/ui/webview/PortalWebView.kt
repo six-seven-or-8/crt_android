@@ -68,7 +68,9 @@ fun PortalWebView(
 
                                 // Inyectar JS con delay para esperar que el DOM esté listo
                                 scope.launch {
-                                    delay(1200)
+                                    // Angular necesita más tiempo para renderizar
+                                    val isAngular = company.id.startsWith("vtl_")
+                                    delay(if (isAngular) 3500L else 1200L)
                                     val script = ContentScript.getScript(company.id, userData)
                                     if (script != null) {
                                         view.evaluateJavascript(script) { }

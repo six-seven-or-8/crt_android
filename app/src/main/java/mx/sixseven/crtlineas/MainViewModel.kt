@@ -84,7 +84,10 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         val jobs = companies.map { company ->
             viewModelScope.async(Dispatchers.IO) {
                 val result = apiService.query(company.id, userData)
-                val named  = result.copy(companyName = company.name)
+                val named  = result.copy(
+                    companyName = company.name,
+                    url         = if (result.url.isBlank()) company.url else result.url,
+                )
                 storage.saveResult(named)
                 _state.update { current ->
                     current.copy(results = current.results + (named.companyId to named))

@@ -19,6 +19,7 @@ import mx.sixseven.crtlineas.QueryUiState
 import mx.sixseven.crtlineas.model.*
 import mx.sixseven.crtlineas.ui.theme.CRTColors
 import mx.sixseven.crtlineas.ui.webview.PortalWebView
+import mx.sixseven.crtlineas.ui.webview.SilentWebView
 
 // ══════════════════════════════════════════════════════════
 // ProgressScreen.kt — CRT Líneas Android
@@ -49,14 +50,23 @@ fun ProgressScreen(
 
     // Si hay un WebView activo, mostrarlo a pantalla completa
     if (currentWebview != null && uiState.phase == QueryPhase.RUNNING_WEBVIEW) {
+        // Portales VTL (Angular): pantalla de carga invisible, sin mostrar el portal al usuario
+        if (currentWebview.id.startsWith("vtl_")) {
+            SilentWebView(
+                company  = currentWebview,
+                userData = userData,
+                onDone   = onWebviewDone,
+                onError  = onWebviewError,
+            )
+            return
+        }
+        // Portales normales: mostrar WebView completo con header
         Column(modifier = Modifier.fillMaxSize()) {
-            // Barra de progreso WebView
             WebviewProgressBar(
                 current = webviewDone + 1,
                 total   = webviewTotal,
                 name    = currentWebview.name,
             )
-            // WebView
             PortalWebView(
                 company  = currentWebview,
                 userData = userData,
