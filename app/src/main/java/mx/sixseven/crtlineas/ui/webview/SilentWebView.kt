@@ -4,7 +4,10 @@ import android.annotation.SuppressLint
 import android.webkit.*
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -106,43 +109,8 @@ fun SilentWebView(
                 update = { }
             )
 
-            // Pantalla de carga visible para el usuario
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(CRTColors.Azul900),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-            ) {
-                // Ícono de escudo girando
-                Text(
-                    text  = "🛡️",
-                    fontSize = 56.sp,
-                    modifier = Modifier.rotate(rotation),
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-                Text(
-                    text  = "Consultando ${company.name}…",
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        color = CRTColors.Blanco,
-                    ),
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text  = "Esto puede tardar unos segundos",
-                    style = MaterialTheme.typography.bodySmall.copy(
-                        color = CRTColors.Blanco.copy(alpha = 0.5f),
-                    ),
-                )
-                Spacer(modifier = Modifier.height(32.dp))
-                LinearProgressIndicator(
-                    modifier = Modifier
-                        .width(200.dp)
-                        .height(3.dp),
-                    color            = CRTColors.Naranja600,
-                    trackColor       = CRTColors.Blanco.copy(alpha = 0.1f),
-                )
-            }
+            // Pantalla de carga fake — UX psicológico clásico
+            FakeProgressScreen(companyName = company.name)
         }
     }
 }
@@ -157,24 +125,34 @@ private suspend fun pollSilent(
     val vtlChecker = """
         (function() {
           var body = document.body ? (document.body.innerText || '') : '';
+          // Mensajes de "sin líneas" del portal VTL
           var noLines = body.includes('No hay información') ||
                         body.includes('no cuenta con líneas') ||
                         body.includes('no encontró') ||
                         body.includes('No se encontr') ||
                         body.includes('error al capturar') ||
-                        body.includes('Búsqueda fallida');
+                        body.includes('Búsqueda fallida') ||
+                        body.includes('Sin líneas') ||
+                        body.includes('no tiene líneas') ||
+                        body.includes('No subscriptions');
+          // Mensajes de éxito con líneas
           var phones = [];
           var matches = body.match(/\b\d{10}\b/g) || [];
           matches.forEach(function(m) {
             if (phones.indexOf(m) < 0) phones.push(m);
           });
-          var done = noLines || phones.length > 0;
+          // También verificar si ya se mostró la pantalla de resultados
+          // (el select #personType ya no está visible = consulta enviada)
+          var formGone = !document.querySelector('#personType') ||
+                         document.querySelector('#personType') === null;
+          var hasResults = document.querySelector('[class*="result"], [class*="subscription"], [class*="lista"]') !== null;
+          var done = noLines || phones.length > 0 || (formGone && hasResults);
           return JSON.stringify({ done: done, phones: phones, noLines: noLines });
         })();
     """.trimIndent()
 
-    // Timeout máximo de 30 segundos
-    repeat(40) {
+    // Timeout máximo de 20 segundos — si no hay respuesta, asumir sin líneas
+    repeat(27) {
         delay(750)
         var finished = false
         withContext(kotlinx.coroutines.Dispatchers.Main) {
@@ -201,6 +179,182 @@ private suspend fun pollSilent(
         }
         if (finished) return
     }
-    // Timeout — asumir sin líneas
+    // Timeout — asumir sin líneas y continuar
     onFound(emptyList())
+}
+
+// ══════════════════════════════════════════════════════════
+// FakeProgressScreen — UX psicológico clásico
+// Barra de progreso que avanza sola + texto tipo "matrix"
+// para que el usuario sienta que la consulta está viva
+// ══════════════════════════════════════════════════════════
+@Composable
+private fun FakeProgressScreen(companyName: String) {
+    // Progreso fake: avanza rápido al 85%, luego espera hasta que termine
+    var fakeProgress by remember { mutableStateOf(0f) }
+    var statusText   by remember { mutableStateOf("Iniciando conexión segura…") }
+    var hexText      by remember { mutableStateOf("") }
+
+    val statusMessages = listOf(
+        "Iniciando conexión segura…",
+        "Autenticando con el portal…",
+        "Enviando solicitud al CRT…",
+        "Esperando respuesta del servidor…",
+        "Procesando datos de vinculación…",
+        "Verificando registros…",
+        "Casi listo…",
+    )
+
+    // Avanzar progreso
+    LaunchedEffect(Unit) {
+        var msgIdx = 0
+        // Fase 1: avanzar rápido hasta 85%
+        while (fakeProgress < 0.85f) {
+            delay(120)
+            fakeProgress = (fakeProgress + (0.008f + (Math.random() * 0.012f).toFloat()))
+                .coerceAtMost(0.85f)
+            // Cambiar mensaje cada ~15%
+            val newIdx = ((fakeProgress / 0.85f) * (statusMessages.size - 1)).toInt()
+                .coerceAtMost(statusMessages.size - 1)
+            if (newIdx != msgIdx) {
+                msgIdx = newIdx
+                statusText = statusMessages[msgIdx]
+            }
+        }
+        // Fase 2: pulsar lentamente entre 85-92% esperando respuesta real
+        while (true) {
+            delay(800)
+            fakeProgress = (0.85f + (Math.random() * 0.07f).toFloat()).coerceAtMost(0.92f)
+        }
+    }
+
+    // Texto hex tipo "matrix" que cambia constantemente
+    LaunchedEffect(Unit) {
+        val chars = "0123456789ABCDEF"
+        while (true) {
+            delay(80)
+            hexText = (1..32).map { chars.random() }.chunked(4).joinToString(" ")
+        }
+    }
+
+    // Animación de rotación del escudo
+    val infiniteTransition = rememberInfiniteTransition(label = "shield")
+    val rotation by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue  = 360f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(2000, easing = LinearEasing)
+        ),
+        label = "rotation"
+    )
+
+    // Animación suave de la barra
+    val animatedProgress by animateFloatAsState(
+        targetValue    = fakeProgress,
+        animationSpec  = tween(300, easing = FastOutSlowInEasing),
+        label          = "progress"
+    )
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(CRTColors.Azul900)
+            .padding(32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        // Escudo girando
+        Text(
+            text     = "🛡️",
+            fontSize = 52.sp,
+            modifier = Modifier.rotate(rotation),
+        )
+
+        Spacer(modifier = Modifier.height(28.dp))
+
+        Text(
+            text  = "Consultando $companyName",
+            style = MaterialTheme.typography.titleMedium.copy(
+                color      = CRTColors.Blanco,
+                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+            ),
+        )
+
+        Spacer(modifier = Modifier.height(6.dp))
+
+        Text(
+            text  = statusText,
+            style = MaterialTheme.typography.bodySmall.copy(
+                color = CRTColors.Naranja600,
+            ),
+        )
+
+        Spacer(modifier = Modifier.height(28.dp))
+
+        // Barra de progreso fake
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(6.dp)
+                .background(
+                    CRTColors.Blanco.copy(alpha = 0.08f),
+                    androidx.compose.foundation.shape.RoundedCornerShape(3.dp)
+                )
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(animatedProgress)
+                    .fillMaxHeight()
+                    .background(
+                        brush = androidx.compose.ui.graphics.Brush.horizontalGradient(
+                            colors = listOf(CRTColors.Azul800, CRTColors.Naranja600)
+                        ),
+                        shape = androidx.compose.foundation.shape.RoundedCornerShape(3.dp)
+                    )
+            )
+        }
+
+        Spacer(modifier = Modifier.height(6.dp))
+
+        Row(
+            modifier              = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Text(
+                text  = "${(animatedProgress * 100).toInt()}%",
+                style = MaterialTheme.typography.labelSmall.copy(
+                    color = CRTColors.Blanco.copy(alpha = 0.4f),
+                ),
+            )
+            Text(
+                text  = "CRT • vinculatulinea.com",
+                style = MaterialTheme.typography.labelSmall.copy(
+                    color = CRTColors.Blanco.copy(alpha = 0.4f),
+                ),
+            )
+        }
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        // Texto hex tipo matrix — da sensación de actividad
+        Text(
+            text  = hexText,
+            style = MaterialTheme.typography.labelSmall.copy(
+                color      = CRTColors.Verde700.copy(alpha = 0.5f),
+                fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
+                fontSize   = 10.sp,
+                letterSpacing = 2.sp,
+            ),
+        )
+
+        Spacer(modifier = Modifier.height(48.dp))
+
+        Text(
+            text  = "Esta consulta puede tardar hasta 30 segundos.\nEl portal oficial está siendo consultado de forma segura.",
+            style = MaterialTheme.typography.bodySmall.copy(
+                color     = CRTColors.Blanco.copy(alpha = 0.3f),
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            ),
+        )
+    }
 }
