@@ -24,7 +24,7 @@ object ContentScript {
             "vtl_oxxocel"    -> scriptVinculaTuLinea(id, tipo, cit)
             "vtl_ubercel"    -> scriptVinculaTuLinea(id, tipo, cit)
             "weex"         -> scriptWeex(id, tipo, cit)
-            "logistica"    -> scriptGenericAuto(id, "logistica")
+            "logistica"    -> scriptLogistica(id, tipo)
             "dalefon"      -> scriptDalefon(id, tipo, cit)
             "dalefon_bien" -> scriptDalefonBien(id, tipo, cit)
             "redphone"     -> scriptTurboRails(id)
@@ -37,6 +37,40 @@ object ContentScript {
             else           -> null
         }
     }
+
+    // ── Logística ACN (Dua / Fedego! / Flash Mobile) ──────────
+    // DOM verificado: input#curp, checkboxes TC+AV, CAPTCHA manual
+    private fun scriptLogistica(id: String, tipo: PersonType): String = """
+(function() {
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+  function setVal(el, v) {
+    var nd = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype,'value');
+    if (nd && nd.set) { nd.set.call(el, v); } else { el.value = v; }
+    el.dispatchEvent(new Event('input',  { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+  async function waitFor(sel, maxMs) {
+    var end = Date.now() + (maxMs || 10000);
+    while (Date.now() < end) {
+      var el = document.querySelector(sel);
+      if (el) return el;
+      await sleep(300);
+    }
+    return null;
+  }
+  async function run() {
+    var inp = await waitFor('#curp', 10000);
+    if (!inp) return;
+    setVal(inp, '$id');
+    await sleep(400);
+    document.querySelectorAll('input[type="checkbox"]').forEach(function(cb) {
+      if (!cb.checked) cb.click();
+    });
+    // El CAPTCHA lo resuelve el usuario manualmente
+  }
+  run().catch(function(){});
+})();
+    """.trimIndent()
 
     // ── Altán ──────────────────────────────────────────────
     // Selectores verificados: waitFor CURP input, radios tipo persona,
@@ -108,82 +142,70 @@ object ContentScript {
     }
 
     // ── VinculaTuLinea (Freedompop, OUI, YobiTelecom, etc.) ──
-    // Angular app — /my-lines tiene dropdown "Regimen fiscal" + input CURP/RFC + botón Continuar
+    // DOM verificado: select#personType, input#identificationValue, button[type=submit]
+    // Angular requiere setter nativo para disparar ngModel
     private fun scriptVinculaTuLinea(id: String, tipo: PersonType, cit: Citizenship): String {
-        val isMoral   = tipo == PersonType.MORAL
-        val isForeign = cit == Citizenship.EXTRANJERO && !isMoral
-        val personaText = if (isMoral) "Persona Moral" else "Persona F"  // "Física" con acento puede variar
+        val isMoral  = tipo == PersonType.MORAL
+        val selectVal = if (isMoral) "MORAL" else "FISICA"
         return """
 (function() {
   function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-  function setVal(el, v) {
-    var nd = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype,'value');
-    if (nd && nd.set) { nd.set.call(el, v); } else { el.value = v; }
-    el.dispatchEvent(new Event('input',{bubbles:true}));
-    el.dispatchEvent(new Event('change',{bubbles:true}));
-    el.dispatchEvent(new Event('blur',{bubbles:true}));
+
+  function setNative(el, value) {
+    // Angular requiere el setter nativo del prototipo para detectar cambios
+    var nativeSetter = Object.getOwnPropertyDescriptor(
+      el.tagName === 'SELECT'
+        ? window.HTMLSelectElement.prototype
+        : window.HTMLInputElement.prototype,
+      'value'
+    );
+    if (nativeSetter && nativeSetter.set) {
+      nativeSetter.set.call(el, value);
+    } else {
+      el.value = value;
+    }
+    el.dispatchEvent(new Event('input',  { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+    el.dispatchEvent(new Event('blur',   { bubbles: true }));
   }
-  async function waitFor(fn, maxMs) {
+
+  async function waitFor(sel, maxMs) {
     var end = Date.now() + (maxMs || 12000);
     while (Date.now() < end) {
-      var r = fn();
-      if (r) return r;
+      var el = document.querySelector(sel);
+      if (el) return el;
       await sleep(300);
     }
     return null;
   }
+
   async function run() {
-    await sleep(2500);
+    // Esperar a que Angular arranque y renderice el componente
+    var select = await waitFor('#personType', 12000);
+    if (!select) return;
 
-    // Paso 1: Seleccionar "Regimen fiscal" (Persona Física / Persona Moral)
-    // Es un mat-select o select nativo con las opciones del i18n
-    var select = await waitFor(function() {
-      return document.querySelector('mat-select, select, [role="combobox"]');
-    }, 8000);
+    // Paso 1: Seleccionar tipo de persona
+    setNative(select, '$selectVal');
+    await sleep(800);
 
-    if (select) {
-      select.click();
-      await sleep(600);
-      // Buscar opción correcta en el panel que se abre
-      var opts = document.querySelectorAll('mat-option, option, [role="option"]');
-      var target = Array.from(opts).find(function(o) {
-        return (o.textContent||'').trim().includes('$personaText');
-      });
-      if (target) { target.click(); await sleep(600); }
-    }
-
-    // Paso 2: Input CURP/RFC/Pasaporte
-    var inp = await waitFor(function() {
-      // Buscar por placeholder del i18n
-      return document.querySelector(
-        'input[placeholder*="CURP"]:not([disabled]),' +
-        'input[placeholder*="RFC"]:not([disabled]),' +
-        'input[placeholder*="Pasaporte"]:not([disabled]),' +
-        'input[placeholder*="documento"]:not([disabled]),' +
-        'input[type="text"]:not([disabled]):not([readonly])'
-      );
-    }, 6000);
+    // Paso 2: Esperar que aparezca el input de identificación
+    var inp = await waitFor('#identificationValue', 6000);
     if (!inp) return;
     inp.focus();
     await sleep(200);
-    setVal(inp, '$id');
+    setNative(inp, '$id');
     await sleep(500);
 
-    // Paso 3: Checkboxes de términos/aviso
-    document.querySelectorAll('input[type="checkbox"]:not([checked])').forEach(function(cb) {
-      if (!cb.checked) cb.click();
-    });
-    await sleep(300);
-
-    // Paso 4: Botón "Continuar"
-    var btn = await waitFor(function() {
-      return Array.from(document.querySelectorAll('button:not([disabled])')).find(function(b) {
-        var t = (b.textContent||'').trim().toLowerCase();
-        return t === 'continuar' || t === 'continue' || t.includes('consult');
-      });
-    }, 5000);
+    // Paso 3: Botón Continuar (esperar que se habilite)
+    var btn = null;
+    for (var i = 0; i < 20; i++) {
+      btn = document.querySelector('button[type="submit"]:not([disabled])');
+      if (btn) break;
+      await sleep(300);
+    }
     if (btn) btn.click();
   }
+
   run().catch(function(){});
 })();
         """.trimIndent()

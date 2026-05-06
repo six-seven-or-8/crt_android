@@ -78,7 +78,8 @@ object Companies {
         Company(
             id        = "logistica",
             name      = "Dua / Fedego! / Flash Mobile",
-            queryMode = QueryMode.API_DIRECT,
+            url       = "https://consulta.logisticaacn.mx/",
+            queryMode = QueryMode.WEBVIEW,
             personas  = PortalPersonas.FISICA_MX,
         ),
         Company(
