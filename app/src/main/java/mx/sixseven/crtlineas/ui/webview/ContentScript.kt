@@ -16,6 +16,13 @@ object ContentScript {
         val cit  = userData.citizenship
         return when (companyId) {
             "altan"        -> scriptAltan(id, tipo, cit)
+            "vtl_freedompop" -> scriptVinculaTuLinea(id, tipo, cit)
+            "vtl_oui"        -> scriptVinculaTuLinea(id, tipo, cit)
+            "vtl_yobi"       -> scriptVinculaTuLinea(id, tipo, cit)
+            "vtl_ahorrocel"  -> scriptVinculaTuLinea(id, tipo, cit)
+            "vtl_chedraui"   -> scriptVinculaTuLinea(id, tipo, cit)
+            "vtl_oxxocel"    -> scriptVinculaTuLinea(id, tipo, cit)
+            "vtl_ubercel"    -> scriptVinculaTuLinea(id, tipo, cit)
             "weex"         -> scriptWeex(id, tipo, cit)
             "logistica"    -> scriptGenericAuto(id, "logistica")
             "dalefon"      -> scriptDalefon(id, tipo, cit)
@@ -94,6 +101,79 @@ object ContentScript {
     document.querySelectorAll('input[type="checkbox"]').forEach(function(cb) {
       if (!cb.checked) cb.click();
     });
+  }
+  run().catch(function(){});
+})();
+        """.trimIndent()
+    }
+
+    // ── VinculaTuLinea (Freedompop, OUI, YobiTelecom, etc.) ──
+    // Angular app — esperar que cargue y buscar inputs por tipo
+    private fun scriptVinculaTuLinea(id: String, tipo: PersonType, cit: Citizenship): String {
+        val isMoral   = tipo == PersonType.MORAL
+        val isForeign = cit == Citizenship.EXTRANJERO && !isMoral
+        val docType   = when { isMoral -> "RFC"; isForeign -> "Pasaporte"; else -> "CURP" }
+        return """
+(function() {
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+  function setVal(el, v) {
+    var nd = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype,'value');
+    if (nd && nd.set) { nd.set.call(el, v); } else { el.value = v; }
+    el.dispatchEvent(new Event('input',{bubbles:true}));
+    el.dispatchEvent(new Event('change',{bubbles:true}));
+    el.dispatchEvent(new Event('blur',{bubbles:true}));
+  }
+  async function waitFor(fn, maxMs) {
+    var end = Date.now() + (maxMs || 10000);
+    while (Date.now() < end) {
+      var r = fn();
+      if (r) return r;
+      await sleep(400);
+    }
+    return null;
+  }
+  async function run() {
+    await sleep(2000);
+    // Paso 1: Seleccionar tipo de documento si hay tabs/radios/botones
+    var docBtns = Array.from(document.querySelectorAll('button,mat-button-toggle,mat-radio-button,[role="radio"],[role="tab"]'));
+    var docBtn = docBtns.find(function(b) {
+      return (b.textContent||'').trim().toUpperCase().includes('$docType');
+    });
+    if (docBtn) { docBtn.click(); await sleep(800); }
+
+    // Paso 2: Esperar input y rellenar
+    var inp = await waitFor(function() {
+      return document.querySelector(
+        'input[type="text"]:not([disabled]):not([readonly]),' +
+        'input[placeholder*="CURP"]:not([disabled]),' +
+        'input[placeholder*="RFC"]:not([disabled]),' +
+        'input[placeholder*="asaporte"]:not([disabled]),' +
+        'input[placeholder*="documento"]:not([disabled]),' +
+        'mat-form-field input:not([disabled])'
+      );
+    }, 8000);
+    if (!inp) return;
+    inp.focus();
+    await sleep(300);
+    setVal(inp, '$id');
+    await sleep(600);
+
+    // Paso 3: Aceptar términos/checkboxes
+    document.querySelectorAll('mat-checkbox input, input[type="checkbox"]').forEach(function(cb) {
+      if (!cb.checked) cb.click();
+    });
+    await sleep(400);
+
+    // Paso 4: Botón continuar/consultar
+    var btn = await waitFor(function() {
+      return Array.from(document.querySelectorAll(
+        'button:not([disabled]), [mat-raised-button]:not([disabled])'
+      )).find(function(b) {
+        var t = (b.textContent||'').trim().toLowerCase();
+        return t.includes('continu') || t.includes('consult') || t.includes('siguiente') || t.includes('buscar');
+      });
+    }, 4000);
+    if (btn) btn.click();
   }
   run().catch(function(){});
 })();

@@ -43,14 +43,7 @@ object Companies {
             queryMode = QueryMode.API_DIRECT,
             personas  = PortalPersonas.FISICA_MX_MORAL,
         ),
-        // VinculaTuLinea — API compartida, pathName cambia por OMV
-        Company(id="vtl_freedompop", name="Freedompop",          queryMode=QueryMode.API_DIRECT, personas=PortalPersonas.TODOS),
-        Company(id="vtl_oui",        name="OUI",                  queryMode=QueryMode.API_DIRECT, personas=PortalPersonas.TODOS),
-        Company(id="vtl_yobi",       name="Yobi Telecom",         queryMode=QueryMode.API_DIRECT, personas=PortalPersonas.TODOS),
-        Company(id="vtl_ahorrocel",  name="AhorroCel",            queryMode=QueryMode.API_DIRECT, personas=PortalPersonas.FISICA_MX_MORAL),
-        Company(id="vtl_chedraui",   name="Chedraui Movil",       queryMode=QueryMode.API_DIRECT, personas=PortalPersonas.FISICA_MX_MORAL),
-        Company(id="vtl_oxxocel",    name="OXXO CEL",             queryMode=QueryMode.API_DIRECT, personas=PortalPersonas.FISICA_MX_MORAL),
-        Company(id="vtl_ubercel",    name="Uber Cel",             queryMode=QueryMode.API_DIRECT, personas=PortalPersonas.FISICA_MX_MORAL),
+
         // core.newww.mx — API compartida por 3 OMVs
         Company(id="newww_linkmovil",name="Link Móvil",           queryMode=QueryMode.API_DIRECT, personas=PortalPersonas.FISICA_MX_MORAL),
         Company(id="newww_newww",    name="Newww",                queryMode=QueryMode.API_DIRECT, personas=PortalPersonas.FISICA_MX_MORAL),
@@ -139,6 +132,15 @@ object Companies {
             queryMode = QueryMode.WEBVIEW,
             personas  = PortalPersonas.FISICA_MX,
         ),
+        // VinculaTuLinea — misma plataforma, URL con pathName diferente
+        // Requiere WebView porque X-Client-Data es generado dinámicamente por JS
+        Company(id="vtl_freedompop", name="Freedompop",    url="https://vinculatulinea.com/freedompop/welcome",    queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.TODOS),
+        Company(id="vtl_oui",        name="OUI",            url="https://vinculatulinea.com/oui/welcome",           queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.TODOS),
+        Company(id="vtl_yobi",       name="Yobi Telecom",   url="https://vinculatulinea.com/YobiTelecom/welcome",   queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.TODOS),
+        Company(id="vtl_ahorrocel",  name="AhorroCel",      url="https://vinculatulinea.com/Ahorrocel/welcome",     queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.FISICA_MX_MORAL),
+        Company(id="vtl_chedraui",   name="Chedraui Movil", url="https://vinculatulinea.com/Chedrauimovil/welcome", queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.FISICA_MX_MORAL),
+        Company(id="vtl_oxxocel",    name="OXXO CEL",       url="https://vinculatulinea.com/Oxxocel/welcome",       queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.FISICA_MX_MORAL),
+        Company(id="vtl_ubercel",    name="Uber Cel",       url="https://vinculatulinea.com/Ubercel/welcome",       queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.FISICA_MX_MORAL),
         Company(
             id        = "bait",
             name      = "Bait",
