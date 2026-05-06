@@ -59,6 +59,7 @@ data class QueryResult(
     val phones:      List<String> = emptyList(),
     val found:       Boolean = false,
     val url:         String = "",
+    val detail:      String = "",
     val status:      ResultStatus = ResultStatus.OK,
     val errorMsg:    String = "",
     val viaApi:      Boolean = false,
