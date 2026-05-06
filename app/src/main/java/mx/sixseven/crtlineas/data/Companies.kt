@@ -134,13 +134,13 @@ object Companies {
         ),
         // VinculaTuLinea — misma plataforma, URL con pathName diferente
         // Requiere WebView porque X-Client-Data es generado dinámicamente por JS
-        Company(id="vtl_freedompop", name="Freedompop",    url="https://vinculatulinea.com/freedompop/welcome",    queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.TODOS),
-        Company(id="vtl_oui",        name="OUI",            url="https://vinculatulinea.com/oui/welcome",           queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.TODOS),
-        Company(id="vtl_yobi",       name="Yobi Telecom",   url="https://vinculatulinea.com/YobiTelecom/welcome",   queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.TODOS),
-        Company(id="vtl_ahorrocel",  name="AhorroCel",      url="https://vinculatulinea.com/Ahorrocel/welcome",     queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.FISICA_MX_MORAL),
-        Company(id="vtl_chedraui",   name="Chedraui Movil", url="https://vinculatulinea.com/Chedrauimovil/welcome", queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.FISICA_MX_MORAL),
-        Company(id="vtl_oxxocel",    name="OXXO CEL",       url="https://vinculatulinea.com/Oxxocel/welcome",       queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.FISICA_MX_MORAL),
-        Company(id="vtl_ubercel",    name="Uber Cel",       url="https://vinculatulinea.com/Ubercel/welcome",       queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.FISICA_MX_MORAL),
+        Company(id="vtl_freedompop", name="Freedompop",    url="https://vinculatulinea.com/freedompop/my-lines",    queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.TODOS),
+        Company(id="vtl_oui",        name="OUI",            url="https://vinculatulinea.com/oui/my-lines",           queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.TODOS),
+        Company(id="vtl_yobi",       name="Yobi Telecom",   url="https://vinculatulinea.com/YobiTelecom/my-lines",   queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.TODOS),
+        Company(id="vtl_ahorrocel",  name="AhorroCel",      url="https://vinculatulinea.com/Ahorrocel/my-lines",     queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.FISICA_MX_MORAL),
+        Company(id="vtl_chedraui",   name="Chedraui Movil", url="https://vinculatulinea.com/Chedrauimovil/my-lines", queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.FISICA_MX_MORAL),
+        Company(id="vtl_oxxocel",    name="OXXO CEL",       url="https://vinculatulinea.com/Oxxocel/my-lines",       queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.FISICA_MX_MORAL),
+        Company(id="vtl_ubercel",    name="Uber Cel",       url="https://vinculatulinea.com/Ubercel/my-lines",       queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.FISICA_MX_MORAL),
         Company(
             id        = "bait",
             name      = "Bait",

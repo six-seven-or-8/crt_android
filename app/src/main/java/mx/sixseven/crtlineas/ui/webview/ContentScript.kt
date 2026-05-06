@@ -108,11 +108,11 @@ object ContentScript {
     }
 
     // ── VinculaTuLinea (Freedompop, OUI, YobiTelecom, etc.) ──
-    // Angular app — esperar que cargue y buscar inputs por tipo
+    // Angular app — /my-lines tiene dropdown "Regimen fiscal" + input CURP/RFC + botón Continuar
     private fun scriptVinculaTuLinea(id: String, tipo: PersonType, cit: Citizenship): String {
         val isMoral   = tipo == PersonType.MORAL
         val isForeign = cit == Citizenship.EXTRANJERO && !isMoral
-        val docType   = when { isMoral -> "RFC"; isForeign -> "Pasaporte"; else -> "CURP" }
+        val personaText = if (isMoral) "Persona Moral" else "Persona F"  // "Física" con acento puede variar
         return """
 (function() {
   function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
@@ -124,55 +124,64 @@ object ContentScript {
     el.dispatchEvent(new Event('blur',{bubbles:true}));
   }
   async function waitFor(fn, maxMs) {
-    var end = Date.now() + (maxMs || 10000);
+    var end = Date.now() + (maxMs || 12000);
     while (Date.now() < end) {
       var r = fn();
       if (r) return r;
-      await sleep(400);
+      await sleep(300);
     }
     return null;
   }
   async function run() {
-    await sleep(2000);
-    // Paso 1: Seleccionar tipo de documento si hay tabs/radios/botones
-    var docBtns = Array.from(document.querySelectorAll('button,mat-button-toggle,mat-radio-button,[role="radio"],[role="tab"]'));
-    var docBtn = docBtns.find(function(b) {
-      return (b.textContent||'').trim().toUpperCase().includes('$docType');
-    });
-    if (docBtn) { docBtn.click(); await sleep(800); }
+    await sleep(2500);
 
-    // Paso 2: Esperar input y rellenar
+    // Paso 1: Seleccionar "Regimen fiscal" (Persona Física / Persona Moral)
+    // Es un mat-select o select nativo con las opciones del i18n
+    var select = await waitFor(function() {
+      return document.querySelector('mat-select, select, [role="combobox"]');
+    }, 8000);
+
+    if (select) {
+      select.click();
+      await sleep(600);
+      // Buscar opción correcta en el panel que se abre
+      var opts = document.querySelectorAll('mat-option, option, [role="option"]');
+      var target = Array.from(opts).find(function(o) {
+        return (o.textContent||'').trim().includes('$personaText');
+      });
+      if (target) { target.click(); await sleep(600); }
+    }
+
+    // Paso 2: Input CURP/RFC/Pasaporte
     var inp = await waitFor(function() {
+      // Buscar por placeholder del i18n
       return document.querySelector(
-        'input[type="text"]:not([disabled]):not([readonly]),' +
         'input[placeholder*="CURP"]:not([disabled]),' +
         'input[placeholder*="RFC"]:not([disabled]),' +
-        'input[placeholder*="asaporte"]:not([disabled]),' +
+        'input[placeholder*="Pasaporte"]:not([disabled]),' +
         'input[placeholder*="documento"]:not([disabled]),' +
-        'mat-form-field input:not([disabled])'
+        'input[type="text"]:not([disabled]):not([readonly])'
       );
-    }, 8000);
+    }, 6000);
     if (!inp) return;
     inp.focus();
-    await sleep(300);
+    await sleep(200);
     setVal(inp, '$id');
-    await sleep(600);
+    await sleep(500);
 
-    // Paso 3: Aceptar términos/checkboxes
-    document.querySelectorAll('mat-checkbox input, input[type="checkbox"]').forEach(function(cb) {
+    // Paso 3: Checkboxes de términos/aviso
+    document.querySelectorAll('input[type="checkbox"]:not([checked])').forEach(function(cb) {
       if (!cb.checked) cb.click();
     });
-    await sleep(400);
+    await sleep(300);
 
-    // Paso 4: Botón continuar/consultar
+    // Paso 4: Botón "Continuar"
     var btn = await waitFor(function() {
-      return Array.from(document.querySelectorAll(
-        'button:not([disabled]), [mat-raised-button]:not([disabled])'
-      )).find(function(b) {
+      return Array.from(document.querySelectorAll('button:not([disabled])')).find(function(b) {
         var t = (b.textContent||'').trim().toLowerCase();
-        return t.includes('continu') || t.includes('consult') || t.includes('siguiente') || t.includes('buscar');
+        return t === 'continuar' || t === 'continue' || t.includes('consult');
       });
-    }, 4000);
+    }, 5000);
     if (btn) btn.click();
   }
   run().catch(function(){});
