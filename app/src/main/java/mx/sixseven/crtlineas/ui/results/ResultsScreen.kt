@@ -372,7 +372,7 @@ private fun ResultCard(result: QueryResult) {
                 )
             }
 
-            // URL para consulta manual — siempre visible si existe
+            // URL para consulta manual
             if (result.url.isNotBlank()) {
                 Spacer(modifier = Modifier.height(2.dp))
                 Row(
@@ -411,6 +411,33 @@ private fun ResultCard(result: QueryResult) {
                             ),
                         )
                     }
+                }
+            }
+
+            // Compañías incluidas (ej. Altán con 67 OMVs) — desplegable
+            if (result.detail.isNotBlank()) {
+                var expanded by remember { mutableStateOf(false) }
+                val companies = result.detail.split(", ").filter { it.isNotBlank() }
+                TextButton(
+                    onClick = { expanded = !expanded },
+                    contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp),
+                ) {
+                    Text(
+                        text  = if (expanded) "▲ Ocultar ${companies.size} compañías incluidas"
+                                else           "▼ Ver ${companies.size} compañías incluidas",
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            color = CRTColors.Azul800,
+                        ),
+                    )
+                }
+                if (expanded) {
+                    Text(
+                        text  = companies.joinToString(" · "),
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            lineHeight = 18.sp,
+                        ),
+                    )
                 }
             }
         }

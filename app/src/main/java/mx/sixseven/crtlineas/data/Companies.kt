@@ -135,12 +135,10 @@ object Companies {
         // VinculaTuLinea — misma plataforma, URL con pathName diferente
         // Requiere WebView porque X-Client-Data es generado dinámicamente por JS
         Company(id="vtl_freedompop", name="Freedompop",    url="https://vinculatulinea.com/freedompop/my-lines",    queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.TODOS),
-        Company(id="vtl_oui",        name="OUI",            url="https://vinculatulinea.com/oui/my-lines",           queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.TODOS),
-        Company(id="vtl_yobi",       name="Yobi Telecom",   url="https://vinculatulinea.com/YobiTelecom/my-lines",   queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.TODOS),
-        Company(id="vtl_ahorrocel",  name="AhorroCel",      url="https://vinculatulinea.com/freedompop/my-lines",     queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.FISICA_MX_MORAL),
-        Company(id="vtl_chedraui",   name="Chedraui Movil", url="https://vinculatulinea.com/freedompop/my-lines", queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.FISICA_MX_MORAL),
-        Company(id="vtl_oxxocel",    name="OXXO CEL",       url="https://vinculatulinea.com/freedompop/my-lines",       queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.FISICA_MX_MORAL),
-        Company(id="vtl_ubercel",    name="Uber Cel",       url="https://vinculatulinea.com/freedompop/my-lines",       queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.FISICA_MX_MORAL),
+        Company(id="vtl_ahorrocel",  name="AhorroCel (vía Freedompop)",      url="https://vinculatulinea.com/freedompop/my-lines",     queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.FISICA_MX_MORAL),
+        Company(id="vtl_chedraui",   name="Chedraui Móvil (vía Freedompop)", url="https://vinculatulinea.com/freedompop/my-lines", queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.FISICA_MX_MORAL),
+        Company(id="vtl_oxxocel",    name="OXXO CEL (vía Freedompop)",       url="https://vinculatulinea.com/freedompop/my-lines",       queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.FISICA_MX_MORAL),
+        Company(id="vtl_ubercel",    name="Uber Cel (vía Freedompop)",       url="https://vinculatulinea.com/freedompop/my-lines",       queryMode=QueryMode.WEBVIEW, personas=PortalPersonas.FISICA_MX_MORAL),
         Company(
             id        = "bait",
             name      = "Bait",
@@ -168,6 +166,8 @@ object Companies {
         ManualCompany("yumovil", "Yu Movil",              "https://www.yumovil.com.mx/login",                             "man.note.user_pass",   "man.cred.user_pass_yumovil"),
         ManualCompany("nextor",  "Nextor Móvil",          "https://vinculacion.nextormovil.mx/",                          "man.note.nextor",      "man.cred.nextor"),
         ManualCompany("viralcel","Viralcel",               "https://www.viralcel.com/mi-linea",                            "man.note.viralcel",    "man.cred.viralcel"),
+        ManualCompany("vtl_oui", "OUI",                   "https://vinculatulinea.com/oui/my-lines",                      "man.note.vtl",         "man.cred.vtl"),
+        ManualCompany("vtl_yobi","Yobi Telecom",           "https://vinculatulinea.com/YobiTelecom/my-lines",              "man.note.vtl",         "man.cred.vtl"),
     )
 
     // ── Portales con error conocido ────────────────────────

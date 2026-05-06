@@ -92,6 +92,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                 val named  = result.copy(
                     companyName = company.name,
                     url         = if (result.url.isBlank()) company.url else result.url,
+                    detail      = company.detail,
                 )
                 storage.saveResult(named)
                 _state.update { current ->
@@ -129,6 +130,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             phones      = phones,
             found       = phones.isNotEmpty(),
             url         = company?.url ?: "",
+            detail      = company?.detail ?: "",
             status      = ResultStatus.OK,
             viaApi      = false,
         )
