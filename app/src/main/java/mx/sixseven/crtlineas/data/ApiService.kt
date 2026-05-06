@@ -51,7 +51,7 @@ class ApiService {
         runCatching {
             when (companyId) {
                 "weex"      -> queryWeex(id, tipo, cit)
-                "mobig"     -> queryMobig(id, "https://mobig.mx/api/vinculacion/search-by-curp")
+                "mobig"     -> queryMobig(id, "https://mobig.mx/vinculatulinea/consulta-curp")
                 "mobig_bien"-> queryMobig(id, "https://femaseisa.com/api/vinculacion/search-by-curp")
                 "yo_mobile" -> queryYoMobile(id)
                 "ientc"     -> queryIentc(id, tipo)
@@ -71,6 +71,7 @@ class ApiService {
                 "newww_redaguila" -> queryCoreNewww(id, "ra")
                 // Megamóvil
                 "megamovil"       -> queryMegamovil(id)
+                "logistica"       -> queryLogistica(id)
                 else        -> errorResult(companyId, "API no implementada")
             }
         }.getOrElse { e ->
@@ -503,6 +504,39 @@ class ApiService {
                 status      = ResultStatus.OK,
             )
         }.getOrElse { errorResult("megamovil", it.message ?: "Error") }
+    }
+
+    // ── Logística ACN (Dua / Fedego! / Flash Mobile) ─────────
+    // API verificada con HAR: ku.diri.mx/consultaRNU/{CURP}
+    // Devuelve array JSON [] vacío o con líneas
+    private suspend fun queryLogistica(id: String): QueryResult {
+        val url = "https://ku.diri.mx/consultaRNU/$id"
+        val request = Request.Builder()
+            .url(url)
+            .get()
+            .addHeader("Accept", "application/json")
+            .addHeader("Origin", "https://consulta.logisticaacn.mx")
+            .addHeader("Referer", "https://consulta.logisticaacn.mx/")
+            .build()
+        return runCatching {
+            val response = client.newCall(request).execute()
+            val body = response.body?.string() ?: "[]"
+            val arr = org.json.JSONArray(body)
+            val phones = mutableListOf<String>()
+            for (i in 0 until arr.length()) {
+                val item = arr.optJSONObject(i)
+                val num = item?.optString("msisdn") ?: item?.optString("numero") ?: arr.optString(i)
+                if (!num.isNullOrBlank() && num.length >= 10) phones.add(num)
+            }
+            QueryResult(
+                companyId   = "logistica",
+                companyName = "Dua / Fedego! / Flash Mobile",
+                phones      = phones,
+                found       = phones.isNotEmpty(),
+                viaApi      = true,
+                status      = ResultStatus.OK,
+            )
+        }.getOrElse { errorResult("logistica", it.message ?: "Error") }
     }
 
     private fun errorResult(id: String, msg: String) = QueryResult(

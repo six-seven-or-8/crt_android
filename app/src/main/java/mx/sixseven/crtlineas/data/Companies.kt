@@ -78,8 +78,7 @@ object Companies {
         Company(
             id        = "logistica",
             name      = "Dua / Fedego! / Flash Mobile",
-            url       = "https://consulta.logisticaacn.mx/",
-            queryMode = QueryMode.WEBVIEW,
+            queryMode = QueryMode.API_DIRECT,
             personas  = PortalPersonas.FISICA_MX,
         ),
         Company(
@@ -166,7 +165,8 @@ object Companies {
         ManualCompany("telcel",  "Telcel",                "https://registro.telcel.com/vinculatulinea",                   "man.note.biometrico",  "man.cred.biometrico"),
         ManualCompany("tokamov", "Tokamovil",             "https://tokamovil.mx/cumplimiento/consulta-vinculacion/",      "man.note.email_vinc",  "man.cred.email_vinc"),
         ManualCompany("yumovil", "Yu Movil",              "https://www.yumovil.com.mx/login",                             "man.note.user_pass",   "man.cred.user_pass_yumovil"),
-        ManualCompany("nextor",  "Nextor Móvil",          "https://vinculacion.nextormovil.mx/",                          "man.note.id_oficial",  "man.cred.id_oficial"),
+        ManualCompany("nextor",  "Nextor Móvil",          "https://vinculacion.nextormovil.mx/",                          "man.note.nextor",      "man.cred.nextor"),
+        ManualCompany("viralcel","Viralcel",               "https://www.viralcel.com/mi-linea",                            "man.note.viralcel",    "man.cred.viralcel"),
     )
 
     // ── Portales con error conocido ────────────────────────
@@ -174,7 +174,6 @@ object Companies {
         // Beneleit: aún en desarrollo
         ErrorCompany("beneleit",    "Beneleit Movil",      "https://beneleit.mx/consultalineas/",    "err.proximamente", "05/05/2026", PortalPersonas.FISICA_MX),
         // Viralcel: error 403 persistente
-        ErrorCompany("viralcel",    "Viral Cel",           "https://www.viralcel.com/mi-linea",      "err.403",          "05/05/2026", PortalPersonas.FISICA_MX),
     )
 
     // ── Filtrar portales según tipo de persona ─────────────
