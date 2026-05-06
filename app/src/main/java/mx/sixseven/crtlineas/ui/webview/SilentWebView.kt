@@ -185,14 +185,12 @@ private suspend fun pollSilent(
 
 // ══════════════════════════════════════════════════════════
 // FakeProgressScreen — UX psicológico clásico
-// Barra de progreso que avanza sola + texto tipo "matrix"
-// para que el usuario sienta que la consulta está viva
 // ══════════════════════════════════════════════════════════
 @Composable
 private fun FakeProgressScreen(companyName: String) {
-    // rememberSaveable mantiene el estado cuando el usuario cambia de pestaña
-    var fakeProgress by rememberSaveable { mutableStateOf(0f) }
-    var statusText   by rememberSaveable { mutableStateOf("Iniciando conexión segura…") }
+    // remember normal — rememberSaveable causa problemas con Float delegado
+    var fakeProgress by remember { mutableStateOf(0.0f) }
+    var statusText   by remember { mutableStateOf("Iniciando conexión segura…") }
     var hexText      by remember { mutableStateOf("") }
 
     val statusMessages = listOf(
@@ -206,15 +204,15 @@ private fun FakeProgressScreen(companyName: String) {
     )
 
     // Avanzar progreso
-    LaunchedEffect(Unit) {
+    LaunchedEffect(companyName) {
         var msgIdx = 0
         // Fase 1: avanzar rápido hasta 85%
         while (fakeProgress < 0.85f) {
             delay(120)
-            fakeProgress = (fakeProgress + (0.008f + (Math.random() * 0.012f).toFloat()))
-                .coerceAtMost(0.85f)
+            val increment = 0.008f + (Math.random().toFloat() * 0.012f)
+            fakeProgress = (fakeProgress + increment).coerceAtMost(0.85f)
             // Cambiar mensaje cada ~15%
-            val newIdx = ((fakeProgress / 0.85f) * (statusMessages.size - 1)).toInt()
+            val newIdx = ((fakeProgress / 0.85f) * (statusMessages.size - 1).toFloat()).toInt()
                 .coerceAtMost(statusMessages.size - 1)
             if (newIdx != msgIdx) {
                 msgIdx = newIdx
@@ -224,7 +222,8 @@ private fun FakeProgressScreen(companyName: String) {
         // Fase 2: pulsar lentamente entre 85-92% esperando respuesta real
         while (true) {
             delay(800)
-            fakeProgress = (0.85f + (Math.random() * 0.07f).toFloat()).coerceAtMost(0.92f)
+            val pulse = 0.85f + (Math.random().toFloat() * 0.07f)
+            fakeProgress = pulse.coerceAtMost(0.92f)
         }
     }
 
