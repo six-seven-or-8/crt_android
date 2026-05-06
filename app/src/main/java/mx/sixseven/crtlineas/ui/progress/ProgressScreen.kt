@@ -286,18 +286,16 @@ private fun ApiResultCard(result: QueryResult) {
                     )
                 }
             }
-            Surface(
-                shape = RoundedCornerShape(6.dp),
-                color = color.copy(alpha = 0.15f),
-            ) {
-                Text(
-                    text     = if (result.viaApi) "API" else "WEB",
-                    style    = MaterialTheme.typography.labelSmall.copy(
-                        color = color, fontWeight = FontWeight.Bold,
-                    ),
-                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
-                )
+            // Ícono de estado — claro para el usuario
+            val statusIcon = when {
+                result.status == ResultStatus.ERROR -> "❌"
+                result.found                        -> "⚠️"
+                else                                -> "✅"
             }
+            Text(
+                text  = statusIcon,
+                style = MaterialTheme.typography.titleSmall,
+            )
         }
     }
 }
@@ -323,9 +321,9 @@ private fun PendingPortalCard(company: mx.sixseven.crtlineas.model.Company) {
                 ),
             )
             Icon(
-                imageVector = Icons.Default.HourglassEmpty,
+                imageVector        = Icons.Default.Schedule,
                 contentDescription = "Pendiente",
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                tint     = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                 modifier = Modifier.size(16.dp),
             )
         }

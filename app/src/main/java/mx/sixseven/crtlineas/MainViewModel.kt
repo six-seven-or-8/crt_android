@@ -60,10 +60,13 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             val apiList     = Companies.filterApiForUser(userData.personType, userData.citizenship)
             val webviewList = Companies.filterWebviewForUser(userData.personType, userData.citizenship)
 
-            _state.update { it.copy(
+            // Reset COMPLETO del estado — incluyendo webviewDoneIds y currentWebview
+            _state.update { QueryUiState(
                 phase        = QueryPhase.RUNNING_APIS,
                 results      = emptyMap(),
                 webviewQueue = webviewList,
+                webviewDoneIds = emptySet(),
+                currentWebview = null,
                 isDone       = false,
             )}
 

@@ -152,8 +152,8 @@ private suspend fun pollSilent(
     """.trimIndent()
 
     // Timeout máximo de 20 segundos — si no hay respuesta, asumir sin líneas
-    repeat(80) {  // máximo 60 segundos (80 × 750ms)
-        delay(750)
+    repeat(60) {  // máximo 30 segundos (60 × 500ms)
+        delay(500)
         var finished = false
         withContext(kotlinx.coroutines.Dispatchers.Main) {
             webView.evaluateJavascript(vtlChecker) { result ->
