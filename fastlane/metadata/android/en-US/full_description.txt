@@ -1,0 +1,3 @@
+Discover if someone registered phone lines to your name without permission.
+
+LineShield automatically queries 80+ official CRT portals in Mexico. Your data is encrypted on your device and deleted after 24 hours. No external servers, no ads, no tracking.
